@@ -6,6 +6,7 @@ import jwt
 from constants import JWT_SECRET, JWT_ALGORITHM
 from service.user import UserService
 
+
 class AuthService:
     def __init__(self, user_service: UserService):
         self.user_service = user_service
@@ -17,7 +18,7 @@ class AuthService:
             raise Exception()
 
         if not is_refresh:
-            if not self.user_service.compare_passwords((user.password, password)):
+            if not self.user_service.compare_passwords(user.password, password):
                 raise Exception()
         data = {
             "username": user.username,

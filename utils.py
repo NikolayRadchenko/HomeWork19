@@ -8,7 +8,7 @@ from constants import JWT_SECRET, JWT_ALGORITHM
 def auth_required(func):
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
-            abort(401)
+            abort(403)
         data = request.headers['Authorization']
         token = data.split('Bearer')[-1].strip()
 
@@ -16,7 +16,7 @@ def auth_required(func):
             jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         except Exception as e:
             print('JWT Decode exception', e)
-            abort(401)
+            abort(403)
         return func(*args, **kwargs)
     return wrapper
 
@@ -24,16 +24,16 @@ def auth_required(func):
 def admin_required(func):
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
-            abort(401)
+            abort(403)
         data = request.headers['Authorization']
         token = data.split('Bearer')[-1].strip()
 
         try:
             user = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
             if user['role'] != 'admin':
-                abort(401)
+                abort(403)
         except Exception as e:
             print('JWT Decode exception', e)
-            abort(401)
+            abort(403)
         return func(*args, **kwargs)
     return wrapper
